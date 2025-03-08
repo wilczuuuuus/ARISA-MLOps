@@ -2,7 +2,7 @@
 	"name": "ARISA-MLOps-devcontainer",
 	"image": "mcr.microsoft.com/devcontainers/python:3.11-bullseye",
 
-	//"postCreateCommand": "pip install --no-cache-dir mlflow==2.12.1",
+	"postCreateCommand": "pip install --no-cache-dir mlflow==2.12.1",
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [5000, 8080],
 
