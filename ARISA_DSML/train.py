@@ -100,7 +100,7 @@ def train_cv(X_train:pd.DataFrame, y_train:pd.DataFrame, categorical_indices:lis
 def train(X_train:pd.DataFrame, y_train:pd.DataFrame, categorical_indices:list[int],  # noqa: PLR0913
           params:dict|None, artifact_name:str="catboost_model_titanic", cv_results=None,
           )->tuple[str|Path]:
-    """Train model on full dataset."""
+    """Train model on full dataset without cross-validation."""
     if params is None:
         logger.info("Training model without tuned hyperparameters")
         params = {}
