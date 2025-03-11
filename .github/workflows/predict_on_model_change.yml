@@ -83,5 +83,6 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ARTIFACT_BUCKET: ${{ secrets.ARTIFACT_BUCKET }}
         run: |
-          aws s3 cp models/preds.csv s3://mlflow-artifacts-arisa-dsml2/predictions/preds.csv --acl private
+          aws s3 cp models/preds.csv s3://$ARTIFACT_BUCKET/predictions/preds.csv --acl private

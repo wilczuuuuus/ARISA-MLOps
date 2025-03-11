@@ -71,20 +71,6 @@ jobs:
           name: trained-model
           path: models/
 
-      # step to commit the model changes to the repo (this should trigger the model predict workflow)
-      - name: Commit and push model changes
-        if: ${{ success() }}  # Only runs if all previous steps (including training) succeed
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          
-          # Check if any files in the models/ directory have changed
-          git diff --exit-code models/ || {
-            git add models/
-            git commit -m "Update trained model"
-            git push
-          }
-
       - name: Trigger Predict Workflow
         run: |
           curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
