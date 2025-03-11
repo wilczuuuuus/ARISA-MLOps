@@ -124,6 +124,7 @@ Once connected to the codespace click the ports tabs and copy the codespace addr
 ![image](https://github.com/user-attachments/assets/7aa26ee2-b5e2-4501-a7e8-bc0975fff330)  
 Back in actions secrets add a new secret containing the address with name MLFLOW_TRACKING_URI  
 When MLFlow UI has started run the model training a couple of times and see the experiments update in the UI  
+Freeze requirements using `pip freeze --local > requirements.txt` and make sure psycopg2 boto3 and kaggle appears in the requirements.txt file, if not install them manually  
 Finally make a change to the train.py code (can be as simple as a comment) and commit (directly to main is fine for this task)  
 A retrain pipeline should be started and hopefully success in the actions tab  
 After the retrain pipeline finished it should trigger the predict on model change pipeline  
