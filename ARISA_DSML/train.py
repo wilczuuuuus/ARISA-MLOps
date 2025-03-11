@@ -293,7 +293,8 @@ if __name__=="__main__":
     cv_output_path = train_cv(X_train, y_train, categorical_indices, params)
     cv_results = pd.read_csv(cv_output_path)
 
-    # here we would evaluate if model train run mean metric test score is above previous test score
+    experiment_id = get_or_create_experiment("titanic_full_training")
+    mlflow.set_experiment(experiment_id=experiment_id)
     model_path, model_params_path = train(X_train, y_train, categorical_indices, params, cv_results=cv_results)
 
     cv_results = pd.read_csv(cv_output_path)
