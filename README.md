@@ -42,4 +42,90 @@ and running the two pipelines in GitHub Actions Workflows, see architecture belo
 ![arisa-githut-architecture](https://github.com/user-attachments/assets/fb13f63b-e821-4b9b-869a-e3f2ea431a9b)
 ![arisa resolve](https://github.com/user-attachments/assets/76eedd72-0326-4d80-879c-9f6761349032)
 ### Getting the architecture up and running
+Since we will be using AWS S3 and RDS to host the MLflow artifact store and metadata store respectively we will neeed to set these up in AWS.  
+Set up a new AWS account if you don't have one already (and enable MFA!)
+#### Metadata store database
+Navigate to RDS  
+Create a new database using "Standard create"  
+Choose PostgreSQL engine  
+Select Free tier as Template  
+Change DB instance identifier to something like mlflow-db  
+Leave Master username as the default  
+Select Self managed for Credentials management and input a random password (keep the password for later)  
+Under connectivity select Yes for Publics access and create new VPC security group (call it something like mflow-db-sg) and note the Database port under Additional configuration (should be 5432)  
+Near the bottom under the second Additional configuration under Database options write mlflow_db under Initial database name  
+At the very bottom click Create database  
+Once the database has finished creating click on the instance and copy the endpoint  
+Click the VPC security group and make sure that the inbound rules look like the following:  
+![image](https://github.com/user-attachments/assets/99978aa4-5f0b-49de-a453-f5626956b23d)  
+#### Artifact store
+Navigate to S3  
+Create bucket  
+Leave all settings at their default values  
+Give a globally unique name to the bucket and keep it for later  
+Create bucket  
+#### Authenticate
+Navigate to IAM  
+Click Users  
+Create user  
+Enter a User name, something like github-actions-runner  
+Next  
+Under Set permissions choose Attach policies directly  
+Under Permissions policies add AmazonS3FullAccess  
+Next  
+Review and create -> Create user  
+Click the newly created user  
+Go to Security credentials  
+Click Create access key  
+Choose Application running outside AWS  
+Next  
+Optionally add a description  
+Click Create access key  
+Copy both the Access key and Secret access key (do not share these with anyone or commit them to any repo!)  
+#### GitHub Secrets setup
+You should now have the following pieces of information:  
+ * Access key (from the github-actions-runner user security credentials)  
+ * Secret access key (from the github-actions-runner user security credentials)  
+ * MLflow database name (should be mlflow_db if you followed the above instructions)  
+ * MLflow database endpoint (from RDS)  
+ * MLflow database username (default is postgres)  
+ * MLflow database password (the random password you chose when setting up the RDS database)
+ * MLflow database port (should be 5432)  
+ * Kaggle key (contents of kaggle.json, from earlier sessions or create a new one)
+ * S3 bucket name
+
+Add all of these to your repository's Codespaces secrets with the names:  
+ * AWS_ACCESS_KEY_ID
+ * AWS_SECRET_ACCESS_KEY
+ * MLFLOWDB
+ * MLFLOWDBENDPOINT
+ * MLFLOWDBUSERNAME
+ * MLFLOWDBPASS
+ * MLFLOWDBPORT
+ * KAGGLE_KEY
+ * ARTIFACT_BUCKET
+
+Also add the following to your repository's Actions secrets:
+ * AWS_ACCESS_KEY_ID
+ * AWS_SECRET_ACCESS_KEY
+ * KAGGLE_KEY
+ * ARTIFACT_BUCKET
+
+#### Code and codespaces setup 
+Now make sure your version/fork of the repo is up to date with the current state of the master branch of this repo  
+Especially make sure that the following commands are part of your .devcontainer.json:
+```
+	"postCreateCommand": "pip install --no-cache-dir mlflow==2.12.1 psycopg2",
+	"postStartCommand": "mlflow ui --backend-store-uri postgresql://${MLFLOWDBUSERNAME}:${MLFLOWDBPASS}@${MLFLOWDBENDPOINT}:${MLFLOWDBPORT}/${MLFLOWDB} --default-artifact-root s3://mlflow-artifacts-arisa-dsml2/models --host 0.0.0.0 --port 5000",
+```
+as well as remoteEnv containing the Codespaces secrets (see main branch version)  
+Then start a new codespace with the update version of the code  
+Once connected to the codespace click the ports tabs and copy the codespace address and make sure to change visibility to public.
+![image](https://github.com/user-attachments/assets/7aa26ee2-b5e2-4501-a7e8-bc0975fff330)
+Back in actions secrets add a new secret containing the address and ...
 WIP
+
+
+
+
+
