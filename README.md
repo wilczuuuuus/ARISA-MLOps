@@ -131,7 +131,7 @@ After the retrain pipeline finished it should trigger the predict on model chang
 See how the models tab in the MLFlow UI has changed  
 Change something else in train.py, commit to main and see how the models page update again after both pipelines have run.
 
-**If the mlflow ui does not successfully start click the blue button at the bottom left of the codespaces view and click view creation log for any errors**
+**If the mlflow ui does not successfully start click the blue button at the bottom left of the codespaces view and click view creation log for any errors, and if everything else fails try and delete and recreate the RDS database.**
 
 
 
