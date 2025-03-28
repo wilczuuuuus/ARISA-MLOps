@@ -1,6 +1,6 @@
 """Functions to train model."""
 from pathlib import Path
-##
+#
 from catboost import CatBoostClassifier, Pool, cv
 import joblib
 from loguru import logger
